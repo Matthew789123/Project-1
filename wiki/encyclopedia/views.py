@@ -4,8 +4,9 @@ from . import util
 
 import markdown2
 
+from django.http import HttpResponseRedirect
 
-from django.http import HttpResponse
+from django import forms
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -15,7 +16,9 @@ def index(request):
 def entry(request, title):
     entry = util.get_entry(title)
     if entry is None:
-        return render(request, "encyclopedia/error.html")
+        return render(request, "encyclopedia/error.html", {
+            "content": "Sorry but the requested page was not found. The requested entry may not exist."
+        })
     else:
         return render(request, "encyclopedia/entry.html", {
             "entry": markdown2.markdown(entry),
@@ -33,3 +36,16 @@ def search(request):
         return render(request, "encyclopedia/search.html", {
             "entries": entries
         })
+
+def add(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        entry = request.POST['entry']
+        if title in util.list_entries():
+            return render(request, "encyclopedia/error.html", {
+                "content": "Sorry but this entry already exists."
+            })
+        else:
+            util.save_entry(title, entry)
+            return HttpResponseRedirect(f"/{title}")
+    return render(request, "encyclopedia/add.html")
