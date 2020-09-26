@@ -36,3 +36,17 @@ textarea {
 .sidebar h2 {
     margin-top: 5px;
 }
+
+#title {
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+#entry {
+    margin-top: 30px;
+}
+
+#input {
+    width: 1000px;
+    height: 1000px;
+}
