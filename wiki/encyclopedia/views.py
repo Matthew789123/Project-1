@@ -27,12 +27,12 @@ def entry(request, title):
 
 def search(request):
     if not util.get_entry(request.GET['q']) is None:
-        return entry(request, request.GET['q'])
+        return HttpResponseRedirect(f"/{request.GET['q']}")
     else:
         entries = []
-        for e in util.list_entries():
-            if request.GET['q'].lower() in e.lower():
-                entries.append(e)
+        for entry in util.list_entries():
+            if request.GET['q'].lower() in entry.lower():
+                entries.append(entry)
         return render(request, "encyclopedia/search.html", {
             "entries": entries
         })
@@ -49,3 +49,13 @@ def add(request):
             util.save_entry(title, entry)
             return HttpResponseRedirect(f"/{title}")
     return render(request, "encyclopedia/add.html")
+
+def edit(request, title):
+    if request.method == "POST":
+        util.save_entry(title, request.POST['entry'])
+        return HttpResponseRedirect(f"/{title}")
+    entry = util.get_entry(title)
+    return render(request, "encyclopedia/edit.html", {
+        "title": title,
+        "entry": entry
+    })
