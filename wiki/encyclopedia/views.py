@@ -8,6 +8,8 @@ from django.http import HttpResponseRedirect
 
 from django import forms
 
+import random
+
 def index(request):
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
@@ -59,3 +61,7 @@ def edit(request, title):
         "title": title,
         "entry": entry
     })
+
+def rand(request):
+    random.seed()
+    return HttpResponseRedirect(f"/{util.list_entries()[random.randrange(len(util.list_entries()))]}")
