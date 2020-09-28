@@ -41,7 +41,7 @@ def add(request):
     if request.method == "POST":
         title = request.POST['title']
         entry = request.POST['entry']
-        if title in util.list_entries():
+        if title.lower() in [x.lower() for x in util.list_entries()]:
             return render(request, "encyclopedia/error.html", {
                 "content": "Sorry but this entry already exists."
             })
